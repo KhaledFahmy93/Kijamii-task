@@ -41,11 +41,10 @@ class App extends React.Component {
               >
                 My header
             </TypoGraphy>
-              <Link to={"/search"}>
-                <Button >
-                  <span>Search</span>
-                </Button>
-              </Link>
+            <Button component={Link} to={"/search"}  
+                 color="inherit">
+                  Search
+            </Button>
           </Toolbar>
       </AppBar>
         <Switch>
