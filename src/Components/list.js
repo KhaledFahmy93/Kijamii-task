@@ -18,7 +18,7 @@ class List extends React.Component {
     super(props);
     this.state = {
       TVShows :[],
-      page:0,
+      page:1,
       rowsPerPage:10 ,
     };
   }
