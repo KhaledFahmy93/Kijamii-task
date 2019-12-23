@@ -4,7 +4,6 @@ import { Grid } from "@material-ui/core";
 import { Link} from 'react-router-dom';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -18,11 +17,11 @@ class List extends React.Component {
     super(props);
     this.state = {
       TVShows :[],
-      page:1,
+      page:0,
       rowsPerPage:10 ,
     };
   }
-  handleChangePage  = (event,page) => {
+  handleChangePage  = (page) => {
     this.setState({page});
   };
 
@@ -36,7 +35,7 @@ class List extends React.Component {
       <div style={{ marginTop: 20, padding: 30 }}>
         <Grid container justify="center">
           <TableContainer component={Paper} >
-        <Table aria-label="custom pagination table"> 
+            <Table aria-label="custom pagination table"> 
           <TableHead>
             <TableRow>
               <TableCell align="center">Name</TableCell>
@@ -47,7 +46,9 @@ class List extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {this.state.TVShows.map(row => (
+            {this.state.TVShows
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map(row => (
               <TableRow key={row.id}>
                 <TableCell component="th" scope="row" align="center">
                   {row.name}
@@ -65,19 +66,17 @@ class List extends React.Component {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
-      <TableFooter>
-          <TableRow>
-            <TablePagination 
-             count={TVShows.length}
-             rowsPerPage={rowsPerPage}
-             page={page}
-             onChangePage={this.handleChangePage}
-             onChangeRowsPerPage={this.handleChangeRowsPerPage}
-            />
-          </TableRow>
-        </TableFooter>
-    </Grid>
+          </TableContainer>
+              <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"  
+              count={TVShows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+              />
+        </Grid>
     </div>
     );
   }

@@ -33,6 +33,7 @@ class Show extends React.Component {
         this.state = {
             id:  props.match.params.id,
             detailShow :{},
+            error:{},
             image :'',
             rating: ''
         };
@@ -46,23 +47,20 @@ class Show extends React.Component {
             <Grid container spacing={2}>
               <Grid item>
                 <ButtonBase className={classes.image}>
-                  <img className={classes.img} alt="complex" src={this.state.image } />
+                  <img className={classes.img} alt="complex" src={this.state.image}/>
                 </ButtonBase>
               </Grid>
               <Grid item xs={12} sm container>
                 <Grid item xs container direction="column" spacing={2}>
                   <Grid item xs>
                     <Typography gutterBottom variant="subtitle1">
-                      Standard license
-                    </Typography>
-                    <Typography variant="body2" gutterBottom>
-                      Full resolution 1920x1080 • JPEG
+                    {this.state.detailShow.name}
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
                       ID: {this.state.detailShow.id}
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                      Name: {this.state.detailShow.name}
+                    Language: {this.state.detailShow.language}
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
                       Type:{this.state.detailShow.type}
@@ -73,15 +71,13 @@ class Show extends React.Component {
                     <Typography variant="body2" color="textSecondary">
                       ratings: { this.state.rating }
                     </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="body2" style={{ cursor: 'pointer' }}>
-                      Remove
+                    <Typography variant="body2" color="textSecondary">
+                      Official site: { this.state.officialSite }
                     </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      Summary: { this.state.summary }
+                    </Typography> 
                   </Grid>
-                </Grid>
-                <Grid item>
-                  <Typography variant="subtitle1">$19.00</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -95,8 +91,10 @@ class Show extends React.Component {
         .then(res => {
           const detailShow = res.data;
           this.setState({ image : detailShow.image.original ,  
-                        detailShow : detailShow , 
-                        rating : detailShow.rating.average})
+                        detailShow : detailShow , rating : detailShow.rating.average})
+        }).catch(error => {
+          const Err = error.response;
+          this.setState({error : Err});
         });
       }
 }

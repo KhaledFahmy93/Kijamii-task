@@ -1,10 +1,11 @@
 import React from "react";
-
 import axios from 'axios';
 import { Grid, Paper} from "@material-ui/core";
 import { Link} from 'react-router-dom';
+import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
+import TablePagination from '@material-ui/core/TablePagination';
 import TableCell from '@material-ui/core/TableCell';
 import InputBase from '@material-ui/core/InputBase';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -37,7 +38,7 @@ const styles = theme => ({
     marginRight: 90,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
+      marginLeft: theme.spacing(80),
       width: 'auto',
     },
   },
@@ -71,6 +72,8 @@ class Search extends React.Component {
     super(props);
     this.state = {
       query: '',
+      page:0,
+      rowsPerPage:10,
       results : [],
     }
   }
@@ -78,25 +81,32 @@ class Search extends React.Component {
     this.setState({query: event.target.value} , () => {
       if (this.state.query && this.state.query.length > 1) {
         if (this.state.query.length % 2 === 0) {
-           this.getInfo()
+           this.getShowDetails()
         }
       }
     })
-  }
+  };
 
-   getInfo = async () => {
+  handleChangePage  = (page) => {
+    this.setState({page});
+  };
+
+  handleChangeRowsPerPage = event => {
+    this.setState({'rowsPerPage':event.target.value });
+  };
+
+   getShowDetails = async () => {
     await axios.get(`http://api.tvmaze.com/search/shows?q=${this.state.query}`)
       .then(({ data }) => {
         this.setState({
           results: data,
         });
-        console.log(data)
       })
   }
 
-
   render(){
-    const { classes } = this.props;
+    const { results, rowsPerPage, page} = this.state;
+    const { classes  } = this.props;
     return (
         <div className={classes.root}>
           <div className={classes.search}>
@@ -114,9 +124,9 @@ class Search extends React.Component {
             />
           </div>
 
-          <Grid container justify="center">
-          <TableContainer component={Paper} >
-        <Table aria-label="simple table"> 
+      <Grid container justify="center">
+        <TableContainer component={Paper} >
+            <Table aria-label="simple table"> 
           <TableHead>
             <TableRow>
               <TableCell align="center">Name</TableCell>
@@ -125,24 +135,34 @@ class Search extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {this.state.results.map(row => (
+            {this.state.results
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map(row => (
               <TableRow key={row.show.id}>
                 <TableCell component="th" scope="row" align="center">
                   {row.show.name}
                 </TableCell>
                 <TableCell align="center">{row.show.language}</TableCell>
                 <TableCell align="center">              
-                  <div>
-                    <Link to={"/show/"+row.id} 
-                      className="btn btn-primary"
-                      >show</Link>
-                  </div>     
+                  <Button component={Link}
+                    variant="contained" color="primary"  to={"/show/"+row.id}>
+                    Show
+                  </Button> 
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+        </TableContainer>
+        <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"  
+              count={results?results.length:0}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+              />
     </Grid>
 </div>
     )

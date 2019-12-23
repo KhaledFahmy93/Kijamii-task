@@ -7,6 +7,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import TypoGraphy from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
     root: {
@@ -18,6 +20,9 @@ const styles = theme => ({
       [theme.breakpoints.up('sm')]: {
          display: 'block',
        },
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
     },
 });
 
@@ -36,10 +41,15 @@ class App extends React.Component {
         <Router>
         <AppBar color="primary" position="static">
           <Toolbar>
+              <IconButton edge="start" component={Link} to="/"
+                className={classes.menuButton} color="inherit" aria-label="menu"
+              >
+                <MenuIcon />
+              </IconButton>
               <TypoGraphy className={classes.title}
                 color="inherit" variant="h6" noWrap
               >
-                My header
+                Home
             </TypoGraphy>
             <Button component={Link} to={"/search"}  
                  color="inherit">
