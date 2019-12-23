@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { Grid, Paper } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { Link} from 'react-router-dom';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -10,6 +10,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
 
 class List extends React.Component {
   constructor(props) {
@@ -54,16 +56,17 @@ class List extends React.Component {
                 <TableCell align="center">{row.runtime}</TableCell>
                 <TableCell align="center">{row.summary}</TableCell>
                 <TableCell align="center">              
-                  <div>
-                    <Link to={"/show/"+row.id} 
-                      className="btn btn-primary"
-                      >show</Link>
-                  </div>     
+                  <Button component={Link}
+                    variant="contained" color="primary"  to={"/show/"+row.id}>
+                    Show
+                  </Button>     
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
-          <TableFooter>
+        </Table>
+      </TableContainer>
+      <TableFooter>
           <TableRow>
             <TablePagination 
              count={TVShows.length}
@@ -74,8 +77,6 @@ class List extends React.Component {
             />
           </TableRow>
         </TableFooter>
-        </Table>
-      </TableContainer>
     </Grid>
     </div>
     );
